@@ -1,5 +1,5 @@
 type hal_trust_sdm845, coredomain, domain;
-hal_server_domain(hal_trust_sdm845, hal_lineage_trust)
+hal_server_domain(hal_trust_sdm845, hal_mokee_trust)
 
 type hal_trust_sdm845_exec, exec_type, file_type;
 init_daemon_domain(hal_trust_sdm845)

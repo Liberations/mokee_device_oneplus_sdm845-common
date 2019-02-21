@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016 The CyanogenMod Project
- * Copyright (c) 2018 The LineageOS Project
+ * Copyright (c) 2015 The CyanogenMod Project
+ *               2017-2018 The LineageOS Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,47 +15,59 @@
  * limitations under the License.
  */
 
-package org.lineageos.pocketmode;
+package org.mokee.settings.doze;
 
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.text.TextUtils;
+import android.os.SystemClock;
 import android.util.Log;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
-public class PocketSensor implements SensorEventListener {
+public class PickupSensor implements SensorEventListener {
+
     private static final boolean DEBUG = false;
-    private static final String TAG = "PocketSensor";
+    private static final String TAG = "PickupSensor";
 
-    private static final String GOODIX_FILE =
-            "/sys/devices/platform/soc/soc:goodix_fp/proximity_state";
+    private static final int MIN_PULSE_INTERVAL_MS = 2500;
 
-    private ExecutorService mExecutorService;
     private SensorManager mSensorManager;
     private Sensor mSensor;
     private Context mContext;
+    private ExecutorService mExecutorService;
 
-    public PocketSensor(Context context) {
+    private long mEntryTimestamp;
+
+    public PickupSensor(Context context) {
         mContext = context;
         mSensorManager = mContext.getSystemService(SensorManager.class);
+        mSensor = Utils.getSensor(mSensorManager, "oneplus.sensor.pickup");
         mExecutorService = Executors.newSingleThreadExecutor();
+    }
 
-        for (Sensor sensor : mSensorManager.getSensorList(Sensor.TYPE_ALL)) {
-            if (TextUtils.equals(sensor.getStringType(), "oneplus.sensor.pocket")) {
-                mSensor = sensor;
-                break;
-            }
-        }
+    private Future<?> submit(Runnable runnable) {
+        return mExecutorService.submit(runnable);
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        setFPProximityState(event.values[0] == 1.0);
+        if (DEBUG) Log.d(TAG, "Got sensor event: " + event.values[0]);
+
+        long delta = SystemClock.elapsedRealtime() - mEntryTimestamp;
+        if (delta < MIN_PULSE_INTERVAL_MS) {
+            return;
+        }
+
+        mEntryTimestamp = SystemClock.elapsedRealtime();
+
+        if (event.values[0] == 1) {
+            Utils.launchDozePulse(mContext);
+        }
     }
 
     @Override
@@ -63,25 +75,19 @@ public class PocketSensor implements SensorEventListener {
         /* Empty */
     }
 
-    private void setFPProximityState(boolean isNear) {
-        if (!FileUtils.writeLine(GOODIX_FILE, isNear ? "1" : "0")) {
-            Log.e(TAG, "Proximity state file " + GOODIX_FILE + " is not writable!");
-        }
-    }
-
-    void enable() {
+    protected void enable() {
         if (DEBUG) Log.d(TAG, "Enabling");
-        mExecutorService.submit(() -> {
-            mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        submit(() -> {
+            mEntryTimestamp = SystemClock.elapsedRealtime();
+            mSensorManager.registerListener(this, mSensor,
+                    SensorManager.SENSOR_DELAY_NORMAL);
         });
     }
 
-    void disable() {
+    protected void disable() {
         if (DEBUG) Log.d(TAG, "Disabling");
-        mExecutorService.submit(() -> {
+        submit(() -> {
             mSensorManager.unregisterListener(this, mSensor);
-            // Ensure FP is left enabled
-            setFPProximityState(/* isNear */ false);
         });
     }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#define LOG_TAG "vendor.lineage.trust@1.0-service"
+#define LOG_TAG "vendor.mokee.trust@1.0-service"
 
 #include <android-base/logging.h>
 #include <binder/ProcessState.h>
@@ -30,8 +30,8 @@ using android::status_t;
 using android::hardware::configureRpcThreadpool;
 using android::hardware::joinRpcThreadpool;
 
-using ::vendor::lineage::trust::V1_0::IUsbRestrict;
-using ::vendor::lineage::trust::V1_0::implementation::UsbRestrict;
+using ::vendor::mokee::trust::V1_0::IUsbRestrict;
+using ::vendor::mokee::trust::V1_0::implementation::UsbRestrict;
 
 int main() {
     sp<IUsbRestrict> usbRestrict;

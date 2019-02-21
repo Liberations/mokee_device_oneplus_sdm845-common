@@ -20,7 +20,7 @@ $(call inherit-product, vendor/oneplus/sdm845-common/sdm845-common-vendor.mk)
 # Overlays
 DEVICE_PACKAGE_OVERLAYS += \
     $(LOCAL_PATH)/overlay \
-    $(LOCAL_PATH)/overlay-lineage
+    $(LOCAL_PATH)/overlay-mokee
 
 # Properties
 -include $(LOCAL_PATH)/system_prop.mk
@@ -90,7 +90,7 @@ PRODUCT_PACKAGES += \
 
 # LiveDisplay
 PRODUCT_PACKAGES += \
-    lineage.livedisplay@2.0-service.oneplus_sdm845
+    mokee.livedisplay@2.0-service.oneplus_sdm845
 
 # Media
 PRODUCT_COPY_FILES += \
@@ -119,7 +119,7 @@ PRODUCT_BOOT_JARS += \
 
 # Touch
 PRODUCT_PACKAGES += \
-    lineage.touch@1.0-service.oneplus_sdm845
+    mokee.touch@1.0-service.oneplus_sdm845
 
 # tri-state-key
 PRODUCT_PACKAGES += \
@@ -128,7 +128,7 @@ PRODUCT_PACKAGES += \
 
 # Trust HAL
 PRODUCT_PACKAGES += \
-    lineage.trust@1.0-service.oneplus_sdm845
+    mokee.trust@1.0-service.oneplus_sdm845
 
 # Update engine
 PRODUCT_PACKAGES += \

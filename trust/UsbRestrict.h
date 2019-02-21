@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef VENDOR_LINEAGE_TRUST_V1_0_USBRESTRICT_H
-#define VENDOR_LINEAGE_TRUST_V1_0_USBRESTRICT_H
+#ifndef VENDOR_MOKEE_TRUST_V1_0_USBRESTRICT_H
+#define VENDOR_MOKEE_TRUST_V1_0_USBRESTRICT_H
 
 #include <hidl/MQDescriptor.h>
 #include <hidl/Status.h>
-#include <vendor/lineage/trust/1.0/IUsbRestrict.h>
+#include <vendor/mokee/trust/1.0/IUsbRestrict.h>
 
 namespace vendor {
-namespace lineage {
+namespace mokee {
 namespace trust {
 namespace V1_0 {
 namespace implementation {
@@ -34,7 +34,7 @@ class UsbRestrict : public IUsbRestrict {
   public:
     UsbRestrict() = default;
 
-    // Methods from ::vendor::lineage::trust::V1_0::IUsbRestrict follow.
+    // Methods from ::vendor::mokee::trust::V1_0::IUsbRestrict follow.
     Return<bool> isEnabled() override;
     Return<void> setEnabled(bool enabled) override;
 };
@@ -42,7 +42,7 @@ class UsbRestrict : public IUsbRestrict {
 }  // namespace implementation
 }  // namespace V1_0
 }  // namespace trust
-}  // namespace lineage
+}  // namespace mokee
 }  // namespace vendor
 
-#endif  // VENDOR_LINEAGE_TRUST_V1_0_USBRESTRICT_H
+#endif  // VENDOR_MOKEE_TRUST_V1_0_USBRESTRICT_H

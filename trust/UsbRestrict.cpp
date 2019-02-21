@@ -20,14 +20,14 @@
 #include <android-base/logging.h>
 
 namespace vendor {
-namespace lineage {
+namespace mokee {
 namespace trust {
 namespace V1_0 {
 namespace implementation {
 
 static constexpr const char* kControlPath = "/sys/class/power_supply/usb/otg_switch";
 
-// Methods from ::vendor::lineage::trust::V1_0::IUsbRestrict follow.
+// Methods from ::vendor::mokee::trust::V1_0::IUsbRestrict follow.
 Return<bool> UsbRestrict::isEnabled() {
     std::ifstream file(kControlPath);
     std::string content;
@@ -51,5 +51,5 @@ Return<void> UsbRestrict::setEnabled(bool enabled) {
 }  // namespace implementation
 }  // namespace V1_0
 }  // namespace trust
-}  // namespace lineage
+}  // namespace mokee
 }  // namespace vendor
